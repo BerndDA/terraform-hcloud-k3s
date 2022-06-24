@@ -22,6 +22,12 @@ variable "k3s_version" {
   description = "K3S version to install on the nodes"
 }
 
+variable "location" {
+  type = string
+  default = "nbg1"
+  description = "Location of all resources within Hetzner Cloud (fsn1|nbg1|hel1|ash)"
+}
+
 variable "main_pool_config" {
   type = object({
     num_nodes = number

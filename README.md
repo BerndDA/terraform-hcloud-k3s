@@ -21,4 +21,3 @@ Thanks a lot!
 - Nodes use private network with wireguard backend for communication
 - System Upgrade is scheduled after initial creation (doing nothing but not nice)
 - Currently it is not possible to recreate the first main node because it is used for cluster initialization
-- All resources are created in datacenter "nbg" (future enhancement)

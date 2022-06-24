@@ -4,12 +4,12 @@ resource "hcloud_ssh_key" "default" {
 }
 
 resource "hcloud_placement_group" "main" {
-  name = "main-group"
+  name = "${var.cluster_name}-main-group"
   type = "spread"
 }
 
 resource "hcloud_placement_group" "worker" {
-  name = "worker-group"
+  name = "${var.cluster_name}-worker-group"
   type = "spread"
 }
 
@@ -17,7 +17,7 @@ resource "hcloud_server" "main-node" {
   count       = var.main_pool_config.num_nodes
   name        = "${var.cluster_name}-main-${count.index}"
   image       = var.image
-  location    = "nbg1"
+  location    = var.location
   ssh_keys    = [hcloud_ssh_key.default.name]
   server_type = var.main_pool_config.node_type
   labels = {
@@ -46,7 +46,7 @@ resource "hcloud_server" "worker-node" {
   count       = var.worker_pool_config.num_nodes
   name        = "${var.cluster_name}-worker-${count.index}"
   image       = var.image
-  location    = "nbg1"
+  location    = var.location
   ssh_keys    = [hcloud_ssh_key.default.name]
   server_type = var.worker_pool_config.node_type
   labels = {

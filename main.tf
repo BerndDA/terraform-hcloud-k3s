@@ -4,6 +4,7 @@ module "infra" {
   main_pool_config   = var.main_pool_config
   worker_pool_config = var.worker_pool_config
   image              = var.image
+  location           = var.location
 }
 
 module "k3s" {

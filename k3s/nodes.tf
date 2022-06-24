@@ -15,7 +15,7 @@ locals {
         --node-name="$(hostname -f)" \
         --cluster-cidr=10.244.0.0/16 \
         --etcd-expose-metrics=true \
-        --flannel-backend=wireguard \
+        --flannel-backend=wireguard-native \
         --kube-controller-manager-arg="bind-address=0.0.0.0" \
         --kube-proxy-arg="metrics-bind-address=0.0.0.0" \
         --kube-scheduler-arg="bind-address=0.0.0.0" \
@@ -52,7 +52,7 @@ locals {
         --node-name="$(hostname -f)" \
         --cluster-cidr=10.244.0.0/16 \
         --etcd-expose-metrics=true \
-        --flannel-backend=wireguard \
+        --flannel-backend=wireguard-native \
         --kube-controller-manager-arg="bind-address=0.0.0.0" \
         --kube-proxy-arg="metrics-bind-address=0.0.0.0" \
         --kube-scheduler-arg="bind-address=0.0.0.0" \

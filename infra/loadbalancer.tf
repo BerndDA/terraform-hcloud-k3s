@@ -1,7 +1,7 @@
 resource "hcloud_load_balancer" "api_load_balancer" {
   name               = "${var.cluster_name}-api-lb"
   load_balancer_type = "lb11"
-  location           = "nbg1"
+  location           = var.location
 }
 
 resource "hcloud_load_balancer_target" "api_load_balancer_target" {

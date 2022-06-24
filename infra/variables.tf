@@ -3,7 +3,7 @@ variable "cluster_name" {
 }
 
 variable "image" {
-  type= string
+  type = string
 }
 
 variable "main_pool_config" {
@@ -20,4 +20,7 @@ variable "worker_pool_config" {
   })
 }
 
+variable "location" {
+  type = string
+}
 
