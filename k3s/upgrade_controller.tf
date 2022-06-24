@@ -1,6 +1,6 @@
 locals {
   upgrade_main   = <<EOL
-        kubectl apply --kubeconfig ./kube_config.yaml -f - <<-EOF
+        kubectl apply --kubeconfig ${var.kubeconfig_file} -f - <<-EOF
         apiVersion: upgrade.cattle.io/v1
         kind: Plan
         metadata:
@@ -26,7 +26,7 @@ locals {
       EOF
   EOL
   upgrade_worker = <<EOL
-        kubectl apply --kubeconfig ./kube_config.yaml -f - <<-EOF
+        kubectl apply --kubeconfig ${var.kubeconfig_file} -f - <<-EOF
         apiVersion: upgrade.cattle.io/v1
         kind: Plan
         metadata:
@@ -60,7 +60,7 @@ resource "null_resource" "upgrade_controller" {
     first_main_ip = var.main_ips[0]
   }
   provisioner "local-exec" {
-    command = "kubectl apply --kubeconfig ./kube_config.yaml -f https://github.com/rancher/system-upgrade-controller/releases/download/v0.9.1/system-upgrade-controller.yaml"
+    command = "kubectl apply --kubeconfig ${var.kubeconfig_file} -f https://github.com/rancher/system-upgrade-controller/releases/download/v0.9.1/system-upgrade-controller.yaml"
   }
 }
 
@@ -73,7 +73,7 @@ resource "null_resource" "k3s_upgrade" {
     upgrade_k3s = var.k3s_version
   }
   provisioner "local-exec" {
-    command = "kubectl wait deployment -n system-upgrade system-upgrade-controller --for condition=Available=True --timeout=90s --kubeconfig ./kube_config.yaml"
+    command = "kubectl wait deployment -n system-upgrade system-upgrade-controller --for condition=Available=True --timeout=90s --kubeconfig ${var.kubeconfig_file}"
   }
   provisioner "local-exec" {
     command = local.upgrade_main

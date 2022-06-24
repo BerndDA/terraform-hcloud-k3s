@@ -1,6 +1,6 @@
 locals {
   ccm_secret = <<EOL
-    kubectl apply --kubeconfig ./kube_config.yaml -f - <<-EOF
+    kubectl apply --kubeconfig ${var.kubeconfig_file} -f - <<-EOF
         apiVersion: "v1"
         kind: "Secret"
         metadata:
@@ -24,6 +24,6 @@ resource "null_resource" "ccm" {
     command = local.ccm_secret
   }
   provisioner "local-exec" {
-    command = "kubectl apply --kubeconfig ./kube_config.yaml -f https://github.com/hetznercloud/hcloud-cloud-controller-manager/releases/latest/download/ccm-networks.yaml"
+    command = "kubectl apply --kubeconfig ${var.kubeconfig_file} -f https://github.com/hetznercloud/hcloud-cloud-controller-manager/releases/latest/download/ccm-networks.yaml"
   }
 }

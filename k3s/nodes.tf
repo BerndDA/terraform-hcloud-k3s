@@ -28,7 +28,7 @@ locals {
         --cluster-init --tls-san=${var.api_loadbalancer_ip} --tls-san=${local.tls_sans}" sh -
   EOL
   wait_for_api     = <<EOL
-        until kubectl describe nodes --kubeconfig ./kube_config.yaml
+        until kubectl describe nodes --kubeconfig ${var.kubeconfig_file}
         do
             echo Wait for API to be available...
             sleep 1
@@ -73,9 +73,9 @@ locals {
         --flannel-iface=$(ls -d1 /sys/class/net/en* | awk -F/ '{print $5}')" sh -
   EOL
   copy_cube_config = <<EOL
-        scp -o "StrictHostKeyChecking no" -i ./id_ssh root@${var.main_ips[0]}:/etc/rancher/k3s/k3s.yaml ./kube_config.yaml && \
-        sed -i '' 's/127.0.0.1/${var.api_loadbalancer_ip}/g' ./kube_config.yaml && \
-        sed -i '' 's/default/${var.cluster_name}/g' ./kube_config.yaml
+        scp -o "StrictHostKeyChecking no" -i ${var.ssh_file} root@${var.main_ips[0]}:/etc/rancher/k3s/k3s.yaml ${var.kubeconfig_file} && \
+        sed -i '' 's/127.0.0.1/${var.api_loadbalancer_ip}/g' ${var.kubeconfig_file} && \
+        sed -i '' 's/default/${var.cluster_name}/g' ${var.kubeconfig_file}
   EOL
 }
 
@@ -92,7 +92,7 @@ resource "null_resource" "cluster_init" {
     user        = "root"
     host        = var.main_ips[0]
     agent       = false
-    private_key = file("./id_ssh")
+    private_key = file(var.ssh_file)
   }
   provisioner "remote-exec" {
     inline = [
@@ -122,7 +122,7 @@ resource "null_resource" "master_init" {
     user        = "root"
     host        = var.main_ips[count.index + 1]
     agent       = false
-    private_key = file("./id_ssh")
+    private_key = file(var.ssh_file)
   }
 
   provisioner "remote-exec" {
@@ -148,7 +148,7 @@ resource "null_resource" "worker_init" {
     user        = "root"
     host        = var.worker_ips[count.index]
     agent       = false
-    private_key = file("./id_ssh")
+    private_key = file(var.ssh_file)
   }
 
   provisioner "remote-exec" {

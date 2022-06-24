@@ -24,3 +24,6 @@ variable "location" {
   type = string
 }
 
+variable "ssh_file" {
+  type = string
+}
