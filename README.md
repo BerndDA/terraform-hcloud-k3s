@@ -5,6 +5,10 @@ Heavily inspired by: https://github.com/vitobotta/hetzner-k3s
 
 Thanks a lot!
 
+## Prerequisites
+- generate a ssh keypair (id_ssh) and place it in the root directory of your terraform
+  - `ssh-keygen -f ./id_ssh`
+
 ## Resources created in Hetzner Cloud
 - Main nodes (controlplane) like defined in `main_pool_config`
 - Woker nodes like defined in `worker_pool_config`
@@ -21,3 +25,4 @@ Thanks a lot!
 - Nodes use private network with wireguard backend for communication
 - System Upgrade is scheduled after initial creation (doing nothing but not nice)
 - Currently it is not possible to recreate the first main node because it is used for cluster initialization
+- kubeconfig file will be written to ./kube_config.yml
