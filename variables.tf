@@ -30,7 +30,7 @@ variable "location" {
 
 variable "ssh_file" {
   type    = string
-  default = "./id.ssh"
+  default = "./id_ssh"
   description = "File and Path to ssh key. If you want to create multiple clusters in the same project, you have to use different keys."
 }
 
