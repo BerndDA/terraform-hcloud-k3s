@@ -1,9 +1,9 @@
 output "main_ips" {
-  value = concat(hcloud_server.main-node.*.ipv4_address, hcloud_server_network.main-node-network.*.ip)
+  value = hcloud_server.main-node.*.ipv4_address
 }
 
 output "worker_ips" {
-  value = concat(hcloud_server.worker-node.*.ipv4_address, hcloud_server_network.worker-node-network.*.ip)
+  value = hcloud_server.worker-node.*.ipv4_address
 }
 
 

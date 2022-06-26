@@ -32,3 +32,4 @@ id_ssh.pub
 kube_config.yaml
 .terraform.lock.hcl
 terraform.tfvars
+examples/ha_3main_3worker/kube_config.yml

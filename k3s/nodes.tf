@@ -35,7 +35,7 @@ locals {
         done
   EOL
   wait_for_interface     = <<EOL
-        until [ -d /sys/class/net/ens10 -o -d /sys/class/net/enp7s0 ]
+        until ping -c 1 -W 1 10.0.0.10
         do
             echo Wait for interface to be available...
             sleep 1

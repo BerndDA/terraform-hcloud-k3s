@@ -2,7 +2,7 @@ var hetzner_token {}
 
 module "clusterA" {
   source          = "BerndDA/k3s/hcloud"
-  version         = "0.1.4"
+  version         = "0.1.5"
   hetzner_token   = var.hetzner_token
   cluster_name    = "dev1"
   ssh_file        = "./ssh_id"
@@ -19,7 +19,7 @@ module "clusterA" {
 
 module "clusterB" {
   source          = "BerndDA/k3s/hcloud"
-  version         = "0.1.4"
+  version         = "0.1.5"
   hetzner_token   = var.hetzner_token
   cluster_name    = "dev2"
   ssh_file        = "./ssh_id2"
