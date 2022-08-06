@@ -19,7 +19,7 @@ locals {
           - key: "CriticalAddonsOnly"
             operator: "Equal"
             value: "true"
-            effect: "NoExecute"
+            effect: "NoSchedule"
           cordon: true
           upgrade:
             image: rancher/k3s-upgrade

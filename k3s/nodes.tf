@@ -3,7 +3,6 @@ resource "random_id" "k3s_token" {
 }
 
 locals {
-  tls_sans         = join(" --tls-san=", var.main_ips)
   cluster_init     = <<EOL
         curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="${var.k3s_version}" K3S_TOKEN="${random_id.k3s_token.hex}" INSTALL_K3S_EXEC="server \
         --disable-cloud-controller \
@@ -19,13 +18,13 @@ locals {
         --kube-controller-manager-arg="bind-address=0.0.0.0" \
         --kube-proxy-arg="metrics-bind-address=0.0.0.0" \
         --kube-scheduler-arg="bind-address=0.0.0.0" \
-        --node-taint CriticalAddonsOnly=true:NoExecute \
+        --node-taint CriticalAddonsOnly=true:NoSchedule \
         --kubelet-arg="cloud-provider=external" \
         --advertise-address=$(hostname -I | awk '{print $2}') \
         --node-ip=$(hostname -I | awk '{print $2}') \
         --node-external-ip=$(hostname -I | awk '{print $1}') \
         --flannel-iface=$(ls -d1 /sys/class/net/en* | awk -F/ '{print $5}') \
-        --cluster-init --tls-san=${var.api_loadbalancer_ip} --tls-san=${local.tls_sans}" sh -
+        --cluster-init --tls-san=${var.api_loadbalancer_ip}" sh -
   EOL
   wait_for_api     = <<EOL
         until kubectl describe nodes --kubeconfig ${var.kubeconfig_file}
@@ -56,13 +55,13 @@ locals {
         --kube-controller-manager-arg="bind-address=0.0.0.0" \
         --kube-proxy-arg="metrics-bind-address=0.0.0.0" \
         --kube-scheduler-arg="bind-address=0.0.0.0" \
-        --node-taint CriticalAddonsOnly=true:NoExecute \
+        --node-taint CriticalAddonsOnly=true:NoSchedule \
         --kubelet-arg="cloud-provider=external" \
         --advertise-address=$(hostname -I | awk '{print $2}') \
         --node-ip=$(hostname -I | awk '{print $2}') \
         --node-external-ip=$(hostname -I | awk '{print $1}') \
         --flannel-iface=$(ls -d1 /sys/class/net/en* | awk -F/ '{print $5}') \
-        --server https://${var.api_loadbalancer_ip}:6443 --tls-san=${var.api_loadbalancer_ip} --tls-san=${local.tls_sans}" sh -
+        --server https://${var.api_loadbalancer_ip}:6443 --tls-san=${var.api_loadbalancer_ip}" sh -
   EOL
   worker_init      = <<EOL
         curl -sfL https://get.k3s.io | K3S_TOKEN="${random_id.k3s_token.hex}" INSTALL_K3S_VERSION="${var.k3s_version}" K3S_URL=https://${var.api_loadbalancer_ip}:6443 INSTALL_K3S_EXEC="agent \
