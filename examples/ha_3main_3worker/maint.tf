@@ -17,7 +17,7 @@ provider "hcloud" {
 
 module "k3s" {
   source          = "BerndDA/k3s/hcloud"
-  version         = "0.1.7"
+  version         = "0.1.8"
   # insert the 1 required variable here
   hetzner_token = var.hetzner_token
   cluster_name  = "bernd"
