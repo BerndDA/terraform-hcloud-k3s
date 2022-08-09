@@ -1,5 +1,5 @@
 output "api_loadbalancer_ip" {
-  value       = module.k3s.api_load_balancer_ip
+  value       = module.infra.api_loadbalancer_ip
   description = "the IP of the API loadbalancer"
 }
 
