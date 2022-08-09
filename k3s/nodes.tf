@@ -71,10 +71,14 @@ locals {
         --node-external-ip=$(hostname -I | awk '{print $1}') \
         --flannel-iface=$(ls -d1 /sys/class/net/en* | awk -F/ '{print $5}')" sh -
   EOL
+  modify_kubeconfig = <<EOL
+        cp /etc/rancher/k3s/k3s.yaml /root/kubeconfig.yaml && \
+        sed -i 's/127.0.0.1/${var.api_loadbalancer_ip}/g' /root/kubeconfig.yaml && \
+        sed -i 's/default/${var.cluster_name}/g' /root/kubeconfig.yaml
+
+  EOL
   copy_cube_config = <<EOL
-        scp -o "StrictHostKeyChecking no" -i ${var.ssh_file} root@${var.main_ips[0]}:/etc/rancher/k3s/k3s.yaml ${var.kubeconfig_file} && \
-        sed -i '' 's/127.0.0.1/${var.api_loadbalancer_ip}/g' ${var.kubeconfig_file} && \
-        sed -i '' 's/default/${var.cluster_name}/g' ${var.kubeconfig_file}
+        scp -o "StrictHostKeyChecking no" -i ${var.ssh_file} root@${var.main_ips[0]}:/root/kubeconfig.yaml ${var.kubeconfig_file} 
   EOL
 }
 
@@ -96,7 +100,8 @@ resource "null_resource" "cluster_init" {
   provisioner "remote-exec" {
     inline = [
       local.wait_for_interface,
-      local.cluster_init
+      local.cluster_init,
+      local.modify_kubeconfig
     ]
   }
   provisioner "local-exec" {
