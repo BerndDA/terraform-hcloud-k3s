@@ -6,7 +6,7 @@ terraform {
   required_providers {
     hcloud = {
       source = "hetznercloud/hcloud"
-      version = ">=1.33.2"
+      version = ">=1.38.2"
     }
   }
 }
@@ -17,18 +17,20 @@ provider "hcloud" {
 
 module "k3s" {
   source          = "BerndDA/k3s/hcloud"
-  version         = "0.1.9"
+  version         = "0.1.10"
   # insert the 1 required variable here
   hetzner_token = var.hetzner_token
   cluster_name  = "bernd"
   main_pool_config = {
-    node_type = "cx11"
-    num_nodes = 1
+    node_type = "cax11"
+    num_nodes = 3
   }
   worker_pool_config = {
-    node_type = "cx21"
-    num_nodes = 1
+    node_type = "cax21"
+    num_nodes = 3
   }
-  k3s_version = "v1.24.3+k3s1"
+  k3s_version = "v1.27.1+k3s1"
+  location = "fsn1"
+  image = "103907373"
 }
 
