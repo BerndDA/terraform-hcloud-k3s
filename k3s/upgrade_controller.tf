@@ -60,7 +60,7 @@ resource "null_resource" "upgrade_controller" {
     first_main_ip = var.main_ips[0]
   }
   provisioner "local-exec" {
-    command = "kubectl apply --kubeconfig ${var.kubeconfig_file} -f https://github.com/rancher/system-upgrade-controller/releases/download/v0.9.1/system-upgrade-controller.yaml"
+    command = "kubectl apply --kubeconfig ${var.kubeconfig_file} -f https://github.com/rancher/system-upgrade-controller/releases/download/v0.13.2/system-upgrade-controller.yaml"
   }
 }
 

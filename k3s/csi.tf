@@ -23,6 +23,6 @@ resource "null_resource" "csi" {
     command = local.csi_secret
   }
   provisioner "local-exec" {
-    command = "kubectl apply --kubeconfig ${var.kubeconfig_file} -f https://raw.githubusercontent.com/hetznercloud/csi-driver/v2.3.2/deploy/kubernetes/hcloud-csi.yml"
+    command = "helm repo add hcloud https://charts.hetzner.cloud && helm repo update hcloud && helm install hcloud-csi hcloud/hcloud-csi -n kube-system --kubeconfig ${var.kubeconfig_file}"
   }
 }
