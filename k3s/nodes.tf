@@ -78,14 +78,13 @@ locals {
 
   EOL
   copy_cube_config = <<EOL
-        scp -o "StrictHostKeyChecking no" -i ${local_file.ssh_private_key.filename} root@${var.main_ips[0]}:/root/kubeconfig.yaml ${var.kubeconfig_file} &&\
-        rm ${local_file.ssh_private_key.filename}
+        scp -o "StrictHostKeyChecking no" -i ${local_file.ssh_private_key.filename} root@${var.main_ips[0]}:/root/kubeconfig.yaml ${var.kubeconfig_file}
   EOL
 }
 
 resource "local_file" "ssh_private_key" {
   content  = var.ssh_private_key
-  filename = "./id_ssh_tmp"
+  filename = "./id_${var.cluster_name}"
   file_permission = "0600"
 }
 

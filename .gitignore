@@ -27,8 +27,7 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
-id_ssh
-id_ssh.pub
+id_*
 kube_config.yaml
 .terraform.lock.hcl
 terraform.tfvars
