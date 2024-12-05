@@ -16,7 +16,7 @@ variable "num_worker_nodes" {
 }
 variable "k3s_version" {
 }
-variable "ssh_file" {
+variable "ssh_private_key" {
 }
 variable "kubeconfig_file" {
 }

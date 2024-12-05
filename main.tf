@@ -5,7 +5,7 @@ module "infra" {
   worker_pool_config = var.worker_pool_config
   image              = var.image
   location           = var.location
-  ssh_file           = var.ssh_file
+  ssh_public_key     = var.ssh_public_key
 }
 
 module "k3s" {
@@ -18,7 +18,7 @@ module "k3s" {
   num_worker_nodes    = var.worker_pool_config.num_nodes
   hetzner_token       = var.hetzner_token
   k3s_version         = var.k3s_version
-  ssh_file            = var.ssh_file
+  ssh_private_key     = var.ssh_private_key
   kubeconfig_file     = var.kubeconfig_file
 }
 

@@ -24,6 +24,6 @@ variable "location" {
   type = string
 }
 
-variable "ssh_file" {
+variable "ssh_public_key" {
   type = string
 }

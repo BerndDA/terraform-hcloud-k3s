@@ -1,6 +1,6 @@
 resource "hcloud_ssh_key" "default" {
   name       = "${var.cluster_name}-ssh"
-  public_key = file("${var.ssh_file}.pub")
+  public_key = var.ssh_public_key
 }
 
 resource "hcloud_placement_group" "main" {

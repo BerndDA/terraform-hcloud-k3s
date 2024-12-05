@@ -78,8 +78,15 @@ locals {
 
   EOL
   copy_cube_config = <<EOL
-        scp -o "StrictHostKeyChecking no" -i ${var.ssh_file} root@${var.main_ips[0]}:/root/kubeconfig.yaml ${var.kubeconfig_file} 
+        scp -o "StrictHostKeyChecking no" -i ${local_file.ssh_private_key.filename} root@${var.main_ips[0]}:/root/kubeconfig.yaml ${var.kubeconfig_file} &&\
+        rm ${local_file.ssh_private_key.filename}
   EOL
+}
+
+resource "local_file" "ssh_private_key" {
+  content  = var.ssh_private_key
+  filename = "./id_ssh_tmp"
+  file_permission = "0600"
 }
 
 resource "null_resource" "cluster_init" {
@@ -95,7 +102,7 @@ resource "null_resource" "cluster_init" {
     user        = "root"
     host        = var.main_ips[0]
     agent       = false
-    private_key = file(var.ssh_file)
+    private_key = var.ssh_private_key
   }
   provisioner "remote-exec" {
     inline = [
@@ -126,7 +133,7 @@ resource "null_resource" "master_init" {
     user        = "root"
     host        = var.main_ips[count.index + 1]
     agent       = false
-    private_key = file(var.ssh_file)
+    private_key = var.ssh_private_key
   }
 
   provisioner "remote-exec" {
@@ -152,7 +159,7 @@ resource "null_resource" "worker_init" {
     user        = "root"
     host        = var.worker_ips[count.index]
     agent       = false
-    private_key = file(var.ssh_file)
+    private_key = var.ssh_private_key
   }
 
   provisioner "remote-exec" {

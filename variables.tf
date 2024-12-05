@@ -29,14 +29,22 @@ variable "location" {
 }
 
 variable "ssh_file" {
-  type    = string
-  default = "./id_ssh"
+  type        = string
+  default     = "./id_ssh"
   description = "File and Path to ssh key. If you want to create multiple clusters in the same project, you have to use different keys."
 }
 
+variable "ssh_private_key" {
+  type = string
+}
+
+variable "ssh_public_key" {
+  type = string
+}
+
 variable "kubeconfig_file" {
-  type    = string
-  default = "./kube_config.yml"
+  type        = string
+  default     = "./kube_config.yml"
   description = "File and Path of kubeconfig file to write"
 }
 
