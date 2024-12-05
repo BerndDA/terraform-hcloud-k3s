@@ -24,8 +24,8 @@ resource "hcloud_server" "main-node" {
     "node-type" = "${var.cluster_name}-main"
   }
   placement_group_id = hcloud_placement_group.main.id
-  firewall_ids = [ hcloud_firewall.default_firewall.id ]
-  user_data    = <<EOL
+  firewall_ids       = [hcloud_firewall.default_firewall.id, hcloud_firewall.firewall_allow_ssh.id]
+  user_data          = <<EOL
   #cloud-config
   packages:
     - wireguard
@@ -53,8 +53,8 @@ resource "hcloud_server" "worker-node" {
     "node-type" = "${var.cluster_name}-worker"
   }
   placement_group_id = hcloud_placement_group.worker.id
-  firewall_ids = [ hcloud_firewall.default_firewall.id ]
-  user_data    = <<EOL
+  firewall_ids       = [hcloud_firewall.default_firewall.id, hcloud_firewall.firewall_allow_ssh.id]
+  user_data          = <<EOL
   #cloud-config
   packages:
     - wireguard
