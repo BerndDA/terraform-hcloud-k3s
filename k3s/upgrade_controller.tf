@@ -13,7 +13,7 @@ locals {
           version: ${var.k3s_version}
           nodeSelector:
             matchExpressions:
-              - {key: node-role.kubernetes.io/master, operator: In, values: ["true"]}
+              - {key: node-role.kubernetes.io/control-plane, operator: Exists}
           serviceAccountName: system-upgrade
           tolerations:
           - key: "CriticalAddonsOnly"
@@ -39,7 +39,7 @@ locals {
           version: ${var.k3s_version}
           nodeSelector:
             matchExpressions:
-              - {key: node-role.kubernetes.io/master, operator: NotIn, values: ["true"]}
+              - {key: node-role.kubernetes.io/control-plane, operator: DoesNotExist}
           serviceAccountName: system-upgrade
           prepare:
             image: rancher/k3s-upgrade
