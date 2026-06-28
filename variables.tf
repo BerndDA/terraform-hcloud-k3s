@@ -22,6 +22,12 @@ variable "k3s_version" {
   description = "K3S version to install on the nodes"
 }
 
+variable "system_upgrade_controller_version" {
+  type        = string
+  default     = "v0.19.2"
+  description = "Version of rancher/system-upgrade-controller to install"
+}
+
 variable "location" {
   type        = string
   default     = "nbg1"

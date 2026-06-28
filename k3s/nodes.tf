@@ -3,7 +3,7 @@ resource "random_id" "k3s_token" {
 }
 
 locals {
-  cluster_init     = <<EOL
+  cluster_init       = <<EOL
         curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="${var.k3s_version}" K3S_TOKEN="${random_id.k3s_token.hex}" INSTALL_K3S_EXEC="server \
         --disable-cloud-controller \
         --disable servicelb \
@@ -26,21 +26,21 @@ locals {
         --flannel-iface=$(ls -d1 /sys/class/net/en* | awk -F/ '{print $5}') \
         --cluster-init --tls-san=${var.api_loadbalancer_ip}" sh -
   EOL
-  wait_for_api     = <<EOL
+  wait_for_api       = <<EOL
         until kubectl describe nodes --kubeconfig ${var.kubeconfig_file}
         do
             echo Wait for API to be available...
             sleep 1
         done
   EOL
-  wait_for_interface     = <<EOL
+  wait_for_interface = <<EOL
         until ping -c 1 -W 1 10.0.0.10
         do
             echo Wait for interface to be available...
             sleep 1
         done
   EOL
-  master_init      = <<EOL
+  master_init        = <<EOL
         curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="${var.k3s_version}" K3S_TOKEN="${random_id.k3s_token.hex}" INSTALL_K3S_EXEC="server \
         --disable-cloud-controller \
         --disable servicelb \
@@ -63,7 +63,7 @@ locals {
         --flannel-iface=$(ls -d1 /sys/class/net/en* | awk -F/ '{print $5}') \
         --server https://${var.api_loadbalancer_ip}:6443 --tls-san=${var.api_loadbalancer_ip}" sh -
   EOL
-  worker_init      = <<EOL
+  worker_init        = <<EOL
         curl -sfL https://get.k3s.io | K3S_TOKEN="${random_id.k3s_token.hex}" INSTALL_K3S_VERSION="${var.k3s_version}" K3S_URL=https://${var.api_loadbalancer_ip}:6443 INSTALL_K3S_EXEC="agent \
         --node-name="$(hostname -f)" \
         --kubelet-arg="cloud-provider=external" \
@@ -71,26 +71,26 @@ locals {
         --node-external-ip=$(hostname -I | awk '{print $1}') \
         --flannel-iface=$(ls -d1 /sys/class/net/en* | awk -F/ '{print $5}')" sh -
   EOL
-  modify_kubeconfig = <<EOL
+  modify_kubeconfig  = <<EOL
         cp /etc/rancher/k3s/k3s.yaml /root/kubeconfig.yaml && \
         sed -i 's/127.0.0.1/${var.api_loadbalancer_ip}/g' /root/kubeconfig.yaml && \
         sed -i 's/default/${var.cluster_name}/g' /root/kubeconfig.yaml
 
   EOL
-  copy_cube_config = <<EOL
+  copy_cube_config   = <<EOL
         scp -o "StrictHostKeyChecking no" -i ${local_file.ssh_private_key.filename} root@${var.main_ips[0]}:/root/kubeconfig.yaml ${var.kubeconfig_file}
   EOL
 }
 
 resource "local_file" "ssh_private_key" {
-  content  = var.ssh_private_key
-  filename = "./id_${var.cluster_name}"
+  content         = var.ssh_private_key
+  filename        = "./id_${var.cluster_name}"
   file_permission = "0600"
 }
 
 resource "null_resource" "cluster_init" {
   depends_on = [
-    
+
   ]
   triggers = {
     first_main_ip = var.main_ips[0]

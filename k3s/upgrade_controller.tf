@@ -58,9 +58,17 @@ resource "null_resource" "upgrade_controller" {
   ]
   triggers = {
     first_main_ip = var.main_ips[0]
+    # Re-run the apply whenever the controller version changes so existing
+    # clusters pick up the new manifests (rolling-updates the Deployment).
+    suc_version = var.system_upgrade_controller_version
   }
   provisioner "local-exec" {
-    command = "kubectl apply --kubeconfig ${var.kubeconfig_file} -f https://github.com/rancher/system-upgrade-controller/releases/download/v0.13.2/system-upgrade-controller.yaml"
+    # CRDs were split into a separate crd.yaml as of v0.14.0, so both manifests
+    # must be applied.
+    command = <<-EOT
+      kubectl apply --kubeconfig ${var.kubeconfig_file} -f https://github.com/rancher/system-upgrade-controller/releases/download/${var.system_upgrade_controller_version}/crd.yaml
+      kubectl apply --kubeconfig ${var.kubeconfig_file} -f https://github.com/rancher/system-upgrade-controller/releases/download/${var.system_upgrade_controller_version}/system-upgrade-controller.yaml
+    EOT
   }
 }
 
@@ -81,4 +89,4 @@ resource "null_resource" "k3s_upgrade" {
   provisioner "local-exec" {
     command = local.upgrade_worker
   }
-} 
+}

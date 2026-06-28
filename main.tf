@@ -20,5 +20,7 @@ module "k3s" {
   k3s_version         = var.k3s_version
   ssh_private_key     = var.ssh_private_key
   kubeconfig_file     = var.kubeconfig_file
+
+  system_upgrade_controller_version = var.system_upgrade_controller_version
 }
 

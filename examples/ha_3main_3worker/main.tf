@@ -1,12 +1,14 @@
 variable "hetzner_token" {
-  default = "PEEdA8S1IA1OiMroEabWogWWh42fT8AwHgCZDKhGt6GrBnigu8i1hNd2GKaCv6xq"
+  type        = string
+  sensitive   = true
+  description = "Hetzner Cloud API token. Provide via TF_VAR_hetzner_token or a .tfvars file (never commit it)."
 }
 
 terraform {
   required_providers {
     hcloud = {
       source  = "hetznercloud/hcloud"
-      version = ">=1.38.2"
+      version = "~> 1.66"
     }
   }
 }
