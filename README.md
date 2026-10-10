@@ -24,5 +24,5 @@ Thanks a lot!
 ## Remarks
 - Nodes use private network with wireguard backend for communication
 - System Upgrade is scheduled after initial creation (doing nothing but not nice)
-- Currently it is not possible to recreate the first main node because it is used for cluster initialization
+- The first main node can be recreated as long as etcd quorum survives (i.e. a majority of the control-plane nodes stay up). On replacement it detects the live cluster via the API load balancer and rejoins as an additional server instead of bootstrapping a new one. Losing a majority of main nodes at once still requires an etcd snapshot restore.
 - kubeconfig file will be written to ./kube_config.yml

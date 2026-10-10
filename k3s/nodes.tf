@@ -80,6 +80,21 @@ locals {
   copy_cube_config   = <<EOL
         scp -o "StrictHostKeyChecking no" -i ${local_file.ssh_private_key.filename} root@${var.main_ips[0]}:/root/kubeconfig.yaml ${var.kubeconfig_file}
   EOL
+  # Run on the first main node. If a cluster is already reachable through the API
+  # load balancer (i.e. the other control-plane nodes are alive and have etcd
+  # quorum), join it as an additional server instead of bootstrapping a new
+  # etcd with --cluster-init. This makes the first main node recreatable: on a
+  # fresh apply nothing answers the LB and we bootstrap; on a replace the
+  # surviving mains answer and we rejoin instead of forking the cluster.
+  first_main_init = <<EOL
+        if curl -sk --connect-timeout 5 --max-time 10 https://${var.api_loadbalancer_ip}:6443/ >/dev/null 2>&1; then
+          echo "Existing cluster reachable via API load balancer; joining as an additional server."
+          ${local.master_init}
+        else
+          echo "No cluster reachable; bootstrapping a new cluster with --cluster-init."
+          ${local.cluster_init}
+        fi
+  EOL
 }
 
 resource "local_file" "ssh_private_key" {
@@ -106,7 +121,7 @@ resource "null_resource" "cluster_init" {
   provisioner "remote-exec" {
     inline = [
       local.wait_for_interface,
-      local.cluster_init,
+      local.first_main_init,
       local.modify_kubeconfig
     ]
   }
