@@ -7,6 +7,7 @@ variable "api_loadbalancer_ip" {
 variable "cluster_name" {
 }
 variable "hetzner_token" {
+  ephemeral = true
 }
 variable "num_main_nodes" {
   type = number

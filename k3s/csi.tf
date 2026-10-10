@@ -23,6 +23,6 @@ resource "null_resource" "csi" {
     command = local.csi_secret
   }
   provisioner "local-exec" {
-    command = "helm repo add hcloud https://charts.hetzner.cloud && helm repo update hcloud && helm install hcloud-csi hcloud/hcloud-csi -n kube-system --kubeconfig ${var.kubeconfig_file}"
+    command = "helm repo add hcloud https://charts.hetzner.cloud && helm repo update hcloud && helm upgrade --install hcloud-csi hcloud/hcloud-csi -n kube-system --kubeconfig ${var.kubeconfig_file}"
   }
 }

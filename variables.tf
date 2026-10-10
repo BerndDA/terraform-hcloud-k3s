@@ -1,6 +1,7 @@
 variable "hetzner_token" {
   type        = string
   sensitive   = true
+  ephemeral   = true # only used in provisioner commands, never stored in state; may be fed from an ephemeral resource
   description = "Hetzner cloud API token"
 }
 
